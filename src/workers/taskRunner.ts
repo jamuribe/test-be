@@ -1,15 +1,14 @@
-import { Repository } from "typeorm";
-import { Task } from "../models/Task";
-import { getJobForTaskType } from "../jobs/JobFactory";
-import { WorkflowStatus } from "../workflows/WorkflowFactory";
-import { Workflow } from "../models/Workflow";
-import { Result } from "../models/Result";
+import { Repository } from 'typeorm';
+import { Task } from '../models/Task';
+import { getJobForTaskType } from '../jobs/JobFactory';
+import { Workflow, WorkflowStatus } from '../models/Workflow';
+import { Result } from '../models/Result';
 
 export enum TaskStatus {
-  Queued = "queued",
-  InProgress = "in_progress",
-  Completed = "completed",
-  Failed = "failed",
+  Queued = 'queued',
+  InProgress = 'in_progress',
+  Completed = 'completed',
+  Failed = 'failed',
 }
 
 export class TaskRunner {
@@ -23,7 +22,7 @@ export class TaskRunner {
   async run(task: Task): Promise<void> {
     // Initial State Setup
     task.status = TaskStatus.InProgress;
-    task.progress = "starting job...";
+    task.progress = 'starting job...';
     await this.taskRepository.save(task);
 
     // Gets precise Job implementation based on the taskType string property of the Task entity
@@ -69,7 +68,7 @@ export class TaskRunner {
       this.taskRepository.manager.getRepository(Workflow);
     const currentWorkflow = await workflowRepository.findOne({
       where: { workflowId: task.workflow.workflowId },
-      relations: ["tasks"],
+      relations: ['tasks'],
     });
 
     if (currentWorkflow) {
@@ -88,7 +87,7 @@ export class TaskRunner {
         // ====== TASK 4 LOGIC ======
         // Check if this workflow contains a 'reportGeneration' step
         const reportTask = currentWorkflow.tasks.find(
-          (t) => t.taskType === "reportGeneration",
+          (t) => t.taskType === 'reportGeneration',
         );
 
         if (reportTask && reportTask.resultId) {

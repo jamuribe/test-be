@@ -1,10 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Task } from "./Task";
-import { WorkflowStatus } from "../workflows/WorkflowFactory";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Task } from './Task';
 
-@Entity({ name: "workflows" })
+export enum WorkflowStatus {
+  Initial = 'initial',
+  InProgress = 'in_progress',
+  Completed = 'completed',
+  Failed = 'failed',
+}
+
+@Entity({ name: 'workflows' })
 export class Workflow {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   workflowId!: string;
 
   @Column()
@@ -17,6 +23,6 @@ export class Workflow {
   tasks!: Task[];
 
   // This result column acts as the storage slot for the entire workflow.
-  @Column({ nullable: true, type: "text" })
+  @Column({ nullable: true, type: 'text' })
   result?: string | null;
 }

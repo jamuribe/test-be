@@ -1,16 +1,9 @@
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import { DataSource } from 'typeorm';
-import { Workflow } from '../models/Workflow';
+import { Workflow, WorkflowStatus } from '../models/Workflow';
 import { Task } from '../models/Task';
 import { TaskStatus } from '../workers/taskRunner';
-
-export enum WorkflowStatus {
-  Initial = 'initial',
-  InProgress = 'in_progress',
-  Completed = 'completed',
-  Failed = 'failed',
-}
 
 interface WorkflowStep {
   taskType: string;
