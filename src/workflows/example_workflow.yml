@@ -1,6 +1,10 @@
 name: "example_workflow"
 steps:
-  - taskType: "analysis"
-    stepNumber: 1
-  - taskType: "notification"
-    stepNumber: 2
+- taskType: "polygonArea"
+  stepNumber: 1
+- taskType: "analysis"
+  stepNumber: 2
+  dependsOnStep: 1  # Explicit link to Step 1!
+- taskType: "reportGeneration"
+  stepNumber: 3
+  dependsOnStep: 2  # Explicit link to Step 2! 

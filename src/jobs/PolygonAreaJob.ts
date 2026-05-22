@@ -1,23 +1,25 @@
-// src/jobs/PolygonAreaJob.ts
 import { Job } from "./Job";
 import { Task } from "../models/Task";
 import area from "@turf/area";
 
 export class PolygonAreaJob implements Job {
   async run(task: Task): Promise<any> {
-    // Extract the geoJson from the task.
-    // (Verify if your codebase stores this as task.geoJson or task.payload)
     const geoJson = task.geoJson;
 
     if (!geoJson) {
       throw new Error("Invalid or missing GeoJSON data for area calculation.");
     }
 
-    // Calculate the area using turf
-    const areaInSquareMeters = area(geoJson);
+    const parsedGeoJson =
+      typeof geoJson === "string" ? JSON.parse(geoJson) : geoJson;
 
-    // Return the result object. Your TaskRunner will automatically
-    // capture this return value and save it to task.output.
+    // Because the Earth is a curved sphere and map coordinates are flat,
+    // calculating the true area of a geographic polygon requires complex spherical geometry.
+    // Turf handles this for us.
+    const areaInSquareMeters = area(parsedGeoJson);
+
+    // Return the area in square meters along with the unit for the result.
+    // So that the parent Task Runner can save this result to a database or send it back to a user.
     return {
       areaInSquareMeters: areaInSquareMeters,
       unit: "square meters",
